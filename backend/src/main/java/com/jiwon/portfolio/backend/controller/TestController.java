@@ -10,4 +10,9 @@ public class TestController {
     public String home() {
         return "Backend Success!";
     }
+
+    @GetMapping("/test")
+    public String test(){
+        return "백엔드 연결 성공";
+    }
 }
