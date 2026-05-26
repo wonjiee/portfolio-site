@@ -1,0 +1,25 @@
+### 조회
+GET http://localhost:8080/api/projects
+
+### 생성
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+
+{
+  "title":"Colossam",
+  "techStack":"Unity, C#",
+  "description":"콜로세움 컨셉 배틀 게임"
+}
+
+### 수정
+PUT http://localhost:8080/api/projects/1
+Content-Type: application/json
+
+{
+  "title":"Colossam Remaster",
+  "techStack":"Unity, C#",
+  "description":"업데이트 테스트"
+}
+
+### 삭제
+DELETE http://localhost:8080/api/projects/1
