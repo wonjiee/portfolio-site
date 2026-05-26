@@ -1,3 +1,19 @@
 spring:
   application:
     name: backend
+
+  config:
+    import: optional:application-secret.yaml
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
