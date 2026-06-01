@@ -11,6 +11,17 @@ Content-Type: application/json
   "description":"콜로세움 컨셉 배틀 게임"
 }
 
+### 생성
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+
+{
+  "title":"Scrap-pear",
+  "techStack":"Unity, C#",
+  "description":"조선시대 리썰류 게임"
+}
+
+
 ### 수정
 PUT http://localhost:8080/api/projects/1
 Content-Type: application/json
