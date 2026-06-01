@@ -30,6 +30,13 @@ public class ProjectController {
         return service.createProject(project);
     }
 
+    @GetMapping("/{id}")
+    public Project getProject(
+            @PathVariable Long id){
+
+        return service.getProject(id);
+    }
+
     @PutMapping("/{id}")
     public Project updateProject(
             @PathVariable Long id,
