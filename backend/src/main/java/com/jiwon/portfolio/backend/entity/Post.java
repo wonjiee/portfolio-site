@@ -5,37 +5,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Project {
+public class Post {
 
     @Id
-
     @GeneratedValue(strategy =
-
             GenerationType.IDENTITY)
-
     private Long id;
 
     private String title;
 
-    private String techStack;
-
-    private String summary;
-
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String content;
 
-    private String githubUrl;
+    private LocalDateTime createdAt;
 
-    private String demoUrl;
+    @PrePersist
+    public void prePersist() {
 
-    private String imageUrl;
-
-    private String period;
-
-    private String role;
-
+        this.createdAt =
+                LocalDateTime.now();
+    }
 }

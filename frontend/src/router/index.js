@@ -1,14 +1,81 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ProjectListView from "@/views/ProjectListView.vue";
+
+import { useAuthStore } from '@/stores/auth'
+import { isTokenExpired } from '@/utils/token'
+
+import HomeView from '@/views/public/HomeView.vue'
+import PostListView from '@/views/public/PostListView.vue'
+import PostDetailView from "@/views/public/PostDetailView.vue";
+import LoginView from "@/views/admin/LoginView.vue";
+import AdminDashboardView from "@/views/admin/AdminDashboardView.vue";
+import PostManageView from '@/views/admin/PostManageView.vue'
+import ProjectManageView from "@/views/admin/ProjectManageView.vue";
+import ProjectListView from "@/views/public/ProjectListView.vue";
+import ProjectDetailView from "@/views/public/ProjectDetailView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+
   routes: [
     {
-      path:'/',
-      component:ProjectListView
+      path: '/',
+      component: HomeView
+    },
+
+    {
+      path: '/projects',
+      component: ProjectListView
+    },
+    {
+      path: '/projects/:id',
+      component: ProjectDetailView
+    },
+    {
+      path: '/posts',
+      component: PostListView
+    },
+
+    {
+      path: '/posts/:id',
+      component: PostDetailView
+    },
+
+    {
+      path: '/login',
+      component: LoginView
+    },
+
+    {
+      path: '/admin',
+      component: AdminDashboardView
+    },
+    {
+      path: '/admin/projects',
+      component: ProjectManageView
+    },
+    {
+      path: '/admin/posts',
+      component: PostManageView
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+
+  const token = localStorage.getItem('token')
+  const authStore = useAuthStore()
+
+  if (to.path.startsWith('/admin')) {
+
+    if (!token || isTokenExpired(token)) {
+
+      authStore.logout()
+      next('/login')
+      return
+    }
+  }
+
+  next()
 })
 
 export default router

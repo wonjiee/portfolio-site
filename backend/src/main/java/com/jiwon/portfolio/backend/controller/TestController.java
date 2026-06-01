@@ -11,8 +11,9 @@ public class TestController {
         return "Backend Success!";
     }
 
-    @GetMapping("/test")
+    @GetMapping("/api/test")
     public String test(){
         return "백엔드 연결 성공";
     }
+
 }

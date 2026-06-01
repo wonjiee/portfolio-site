@@ -20,6 +20,14 @@ public class ProjectService {
         return repository.findAll();
     }
 
+    public Project getProject(Long id){
+
+        return repository.findById(id)
+
+                .orElseThrow();
+
+    }
+
     public Project createProject(
             Project project){
 
@@ -40,8 +48,24 @@ public class ProjectService {
         project.setTechStack(
                 updatedProject.getTechStack());
 
+        project.setSummary(
+                updatedProject.getSummary());
         project.setDescription(
                 updatedProject.getDescription());
+        project.setGithubUrl(
+                updatedProject.getGithubUrl());
+
+        project.setDemoUrl(
+                updatedProject.getDemoUrl());
+
+        project.setImageUrl(
+                updatedProject.getImageUrl());
+
+        project.setPeriod(
+                updatedProject.getPeriod());
+
+        project.setRole(
+                updatedProject.getRole());
 
         return repository.save(project);
     }

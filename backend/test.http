@@ -1,8 +1,15 @@
 ### 조회
-GET http://localhost:8080/api/projects
+GET http://localhost:8081/api/projects
+
+### 테스트
+GET http://localhost:8081/test
+
+### 인증 테스트
+GET http://localhost:8081/api/test
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc4MDMwMjg0MiwiZXhwIjoxNzgwMzA2NDQyfQ.BIuWXqoePhtN4pobxjmcYMeYAWY90xtgc-kMjhMldV0
 
 ### 생성
-POST http://localhost:8080/api/projects
+POST http://localhost:8081/api/projects
 Content-Type: application/json
 
 {
@@ -12,7 +19,7 @@ Content-Type: application/json
 }
 
 ### 생성
-POST http://localhost:8080/api/projects
+POST http://localhost:8081/api/projects
 Content-Type: application/json
 
 {
@@ -23,7 +30,7 @@ Content-Type: application/json
 
 
 ### 수정
-PUT http://localhost:8080/api/projects/1
+PUT http://localhost:8081/api/projects/1
 Content-Type: application/json
 
 {
@@ -33,4 +40,25 @@ Content-Type: application/json
 }
 
 ### 삭제
-DELETE http://localhost:8080/api/projects/1
+DELETE http://localhost:8081/api/projects/1
+
+### 회원가입
+POST http://localhost:8081/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "ss6852"
+}
+
+### 로그인
+POST http://localhost:8081/api/auth/login
+Content-Type: application/json
+
+{
+"username":"admin",
+"password":"1234"
+}
+
+### 포스트
+GET http://localhost:8081/api/posts
