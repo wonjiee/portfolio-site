@@ -1,11 +1,8 @@
 package com.jiwon.portfolio.backend.controller;
 
 import com.jiwon.portfolio.backend.entity.Project;
-import com.jiwon.portfolio.backend.repository.ProjectRepository;
-
 import com.jiwon.portfolio.backend.service.ProjectService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,40 +15,38 @@ public class ProjectController {
     private final ProjectService service;
 
     @GetMapping
-    public List<Project> getProjects(){
-
-        return service.getProjects();
-    }
-
-    @PostMapping
-    public Project createProject(
-            @RequestBody Project project){
-
-        return service.createProject(project);
+    public List<Project> findAll() {
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public Project getProject(
-            @PathVariable Long id){
+    public Project findById(
+            @PathVariable Long id) {
 
-        return service.getProject(id);
+        return service.findById(id);
+    }
+
+    @PostMapping
+    public Project create(
+            @RequestBody Project project) {
+
+        return service.create(project);
     }
 
     @PutMapping("/{id}")
-    public Project updateProject(
+    public Project update(
             @PathVariable Long id,
-            @RequestBody Project project){
+            @RequestBody Project project) {
 
-        return service.updateProject(
+        return service.update(
                 id,
                 project);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProject(
-            @PathVariable Long id){
+    public void delete(
+            @PathVariable Long id) {
 
-        service.deleteProject(id);
+        service.delete(id);
     }
-
 }

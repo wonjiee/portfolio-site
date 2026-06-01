@@ -13,7 +13,7 @@
       <p>
 
         <a
-            href="https://github.com"
+            href="https://github.com/wonjiee"
             target="_blank"
         >
           GitHub

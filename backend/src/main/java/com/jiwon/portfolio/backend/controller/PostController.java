@@ -16,7 +16,6 @@ public class PostController {
 
     @GetMapping
     public List<Post> findAll() {
-
         return service.findAll();
     }
 
@@ -28,10 +27,10 @@ public class PostController {
     }
 
     @PostMapping
-    public Post save(
+    public Post create(
             @RequestBody Post post) {
 
-        return service.save(post);
+        return service.create(post);
     }
 
     @PutMapping("/{id}")

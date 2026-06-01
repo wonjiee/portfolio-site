@@ -1,23 +1,31 @@
 <template>
 
-  <div class="container mt-5">
+  <div class="container py-5">
 
-    <div class="card shadow">
+    <div class="card border-0 shadow-sm">
 
-      <div class="card-body">
+      <div class="card-body p-4">
 
-        <h1 class="mb-4">
+        <h1 class="mb-2">
           {{ project.title }}
         </h1>
+
+        <p
+            v-if="project.summary"
+            class="text-muted fs-5 mb-4"
+        >
+          {{ project.summary }}
+        </p>
 
         <img
             v-if="project.imageUrl"
             :src="project.imageUrl"
-            class="img-fluid rounded mb-4"
+            class="img-fluid rounded shadow-sm mb-4"
+            style="max-height: 500px; width: 100%; object-fit: cover;"
             alt="프로젝트 이미지"
         >
 
-        <h4>📌 프로젝트 소개</h4>
+        <h4>Overview</h4>
 
         <p>
           {{ project.description }}
@@ -25,25 +33,25 @@
 
         <hr>
 
-        <h4>🛠 기술 스택</h4>
+        <h4>Tech Stack</h4>
 
-        <p>
+        <p class="mb-0">
           {{ project.techStack }}
         </p>
 
         <hr>
 
-        <h4>📅 개발 기간</h4>
+        <h4>Period</h4>
 
-        <p>
+        <p class="mb-0">
           {{ project.period }}
         </p>
 
         <hr>
 
-        <h4>👨‍💻 담당 역할</h4>
+        <h4>Role</h4>
 
-        <p>
+        <p class="mb-0">
           {{ project.role }}
         </p>
 
@@ -66,14 +74,14 @@
               target="_blank"
               class="btn btn-danger me-2"
           >
-            시연 영상
+            Demo
           </a>
 
           <router-link
               to="/projects"
-              class="btn btn-secondary"
+              class="btn btn-outline-secondary"
           >
-            목록으로
+            Back to Projects
           </router-link>
 
         </div>

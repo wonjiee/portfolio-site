@@ -1,37 +1,42 @@
 <template>
 
-  <div class="container mt-4">
+  <div class="container py-5">
 
     <!-- 소개 -->
 
-    <section class="mb-5">
+    <section class="text-center py-5">
 
-      <h1>엄지원 포트폴리오</h1>
+      <h1 class="display-3 fw-bold">
+        Jiwon Eom
+      </h1>
 
-      <p class="mt-3">
-        컴퓨터공학과 학생이며
-        게임 개발과 웹 개발에 관심이 있습니다.
+      <p class="lead mt-3">
+        Computer Science Student
       </p>
 
-      <p>
-        Unity, Spring Boot, Vue를 활용한 프로젝트를 진행하고 있습니다.
+      <p class="text-muted">
+        Game Developer & Backend Developer
+      </p>
+
+      <p class="mt-4">
+        Building games with Unity and web services with Spring Boot.
       </p>
 
     </section>
 
-    <!-- 프로젝트 -->
+    <!-- Featured Projects -->
 
     <section class="mb-5">
 
       <div class="d-flex justify-content-between align-items-center">
 
-        <h2>프로젝트</h2>
+        <h2>Featured Projects</h2>
 
         <router-link
             to="/projects"
             class="btn btn-outline-primary"
         >
-          전체 보기
+          View All
         </router-link>
 
       </div>
@@ -39,7 +44,7 @@
       <div
           v-for="project in projects.slice(0, 3)"
           :key="project.id"
-          class="card mt-3"
+          class="card shadow-sm border-0 mt-3"
       >
 
         <div class="card-body">
@@ -48,12 +53,20 @@
               :to="`/projects/${project.id}`"
               class="text-decoration-none"
           >
-            <h5>{{ project.title }}</h5>
+
+            <h5 class="fw-bold">
+              {{ project.title }}
+            </h5>
+
           </router-link>
 
-          <p>{{ project.techStack }}</p>
+          <p class="mb-2">
+            {{ project.summary }}
+          </p>
 
-          <p>{{ project.summary }}</p>
+          <p class="text-muted small mb-0">
+            {{ project.techStack }}
+          </p>
 
         </div>
 
@@ -61,19 +74,85 @@
 
     </section>
 
-    <!-- 블로그 -->
+    <!-- Tech Stack -->
 
-    <section>
+    <section class="mb-5">
+
+      <h2>Tech Stack</h2>
+
+      <div class="mt-3">
+
+        <h5>Frontend</h5>
+
+        <span class="badge bg-primary me-2">
+          Vue
+        </span>
+
+        <span class="badge bg-primary me-2">
+          Pinia
+        </span>
+
+        <span class="badge bg-primary me-2">
+          Bootstrap
+        </span>
+
+        <hr>
+
+        <h5>Backend</h5>
+
+        <span class="badge bg-success me-2">
+          Spring Boot
+        </span>
+
+        <span class="badge bg-success me-2">
+          JPA
+        </span>
+
+        <span class="badge bg-success me-2">
+          JWT
+        </span>
+
+        <hr>
+
+        <h5>Game</h5>
+
+        <span class="badge bg-dark me-2">
+          Unity
+        </span>
+
+        <span class="badge bg-dark me-2">
+          C#
+        </span>
+
+        <span class="badge bg-dark me-2">
+          Photon
+        </span>
+
+        <hr>
+
+        <h5>Database</h5>
+
+        <span class="badge bg-secondary me-2">
+          MariaDB
+        </span>
+
+      </div>
+
+    </section>
+
+    <!-- Latest Posts -->
+
+    <section class="mb-5">
 
       <div class="d-flex justify-content-between align-items-center">
 
-        <h2>블로그</h2>
+        <h2>Latest Posts</h2>
 
         <router-link
             to="/posts"
             class="btn btn-outline-secondary"
         >
-          전체 보기
+          View All
         </router-link>
 
       </div>
@@ -81,7 +160,7 @@
       <div
           v-for="post in posts.slice(0, 3)"
           :key="post.id"
-          class="card mt-3"
+          class="card shadow-sm border-0 mt-3"
       >
 
         <div class="card-body">
@@ -90,14 +169,40 @@
               :to="`/posts/${post.id}`"
               class="text-decoration-none"
           >
-            <h5>{{ post.title }}</h5>
+
+            <h5 class="fw-bold">
+              {{ post.title }}
+            </h5>
+
           </router-link>
 
-          <p class="text-muted">
+          <p class="text-muted small mb-0">
             {{ formatDate(post.createdAt) }}
           </p>
 
         </div>
+
+      </div>
+
+    </section>
+
+    <!-- Contact -->
+
+    <section class="my-5">
+
+      <h2>Contact</h2>
+
+      <div class="mt-3">
+
+        <p>
+          GitHub :
+          github.com/wonjiee
+        </p>
+
+        <p>
+          Email :
+          wonjiee01@gmail.com
+        </p>
 
       </div>
 

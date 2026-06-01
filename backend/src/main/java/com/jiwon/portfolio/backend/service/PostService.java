@@ -3,6 +3,7 @@ package com.jiwon.portfolio.backend.service;
 import com.jiwon.portfolio.backend.entity.Post;
 import com.jiwon.portfolio.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +15,12 @@ public class PostService {
     private final PostRepository repository;
 
     public List<Post> findAll() {
-
-        return repository.findAll();
+        return repository.findAll(
+                Sort.by(
+                        Sort.Direction.DESC,
+                        "id"
+                )
+        );
     }
 
     public Post findById(Long id) {
@@ -24,7 +29,7 @@ public class PostService {
                 .orElseThrow();
     }
 
-    public Post save(Post post) {
+    public Post create(Post post) {
 
         return repository.save(post);
     }

@@ -2,9 +2,8 @@ package com.jiwon.portfolio.backend.service;
 
 import com.jiwon.portfolio.backend.entity.Project;
 import com.jiwon.portfolio.backend.repository.ProjectRepository;
-
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,28 +14,29 @@ public class ProjectService {
 
     private final ProjectRepository repository;
 
-    public List<Project> getProjects(){
-
-        return repository.findAll();
+    public List<Project> findAll() {
+        return repository.findAll(
+                Sort.by(
+                        Sort.Direction.DESC,
+                        "id"
+                )
+        );
     }
 
-    public Project getProject(Long id){
+    public Project findById(Long id) {
 
         return repository.findById(id)
-
                 .orElseThrow();
-
     }
 
-    public Project createProject(
-            Project project){
+    public Project create(Project project) {
 
         return repository.save(project);
     }
 
-    public Project updateProject(
+    public Project update(
             Long id,
-            Project updatedProject){
+            Project updatedProject) {
 
         Project project =
                 repository.findById(id)
@@ -70,9 +70,8 @@ public class ProjectService {
         return repository.save(project);
     }
 
-    public void deleteProject(Long id){
+    public void delete(Long id) {
 
         repository.deleteById(id);
     }
-
 }

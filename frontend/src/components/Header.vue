@@ -1,50 +1,48 @@
 <template>
 
-  <nav class="navbar navbar-expand-lg bg-light border-bottom">
+  <nav
+      class="navbar navbar-expand-lg bg-white border-bottom"
+  >
 
     <div class="container">
 
-      <div>
+      <router-link
+          to="/"
+          class="navbar-brand fw-bold"
+      >
+        Jiwon Portfolio
+      </router-link>
 
-        <router-link
-            to="/"
-            class="btn btn-link"
-        >
-          홈
-        </router-link>
+      <div class="navbar-nav ms-auto align-items-center">
 
         <router-link
             to="/projects"
-            class="btn btn-link"
+            class="nav-link"
         >
-          프로젝트
+          Projects
         </router-link>
 
         <router-link
             to="/posts"
-            class="btn btn-link"
+            class="nav-link"
         >
-          블로그
+          Blog
         </router-link>
-
-      </div>
-
-      <div>
 
         <router-link
             v-if="!authStore.isAuthenticated"
             to="/login"
-            class="btn btn-primary"
+            class="btn btn-outline-dark ms-3"
         >
-          관리자 로그인
+          Admin
         </router-link>
 
         <router-link
             v-else
             to="/admin"
-            class="btn btn-dark"
+            class="btn btn-dark ms-3"
         >
-          관리자 페이지
+          Dashboard
         </router-link>
 
       </div>
@@ -56,7 +54,9 @@
 </template>
 
 <script setup>
+
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
+
 </script>
