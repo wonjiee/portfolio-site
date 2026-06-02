@@ -1,109 +1,146 @@
 <template>
 
-  <div class="container mt-5">
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">{{ project.title || 'Project' }}</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><router-link to="/">Home</router-link></li>
+          <li><router-link to="/projects">Projects</router-link></li>
+          <li class="current">Details</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 
-    <div class="card shadow">
+  <section class="portfolio-details section">
 
-      <div class="card-body">
+    <div
+        class="container"
+        data-aos="fade-up"
+    >
 
-        <h1 class="mb-4">
-          {{ project.title }}
-        </h1>
+      <div class="row gy-4">
 
-        <img
-            v-if="project.imageUrl"
-            :src="project.imageUrl"
-            class="img-fluid rounded mb-4"
-            alt="프로젝트 이미지"
+        <div
+            class="col-lg-6"
+            data-aos="fade-right"
         >
+          <div class="portfolio-details-media">
+            <div class="main-image">
+              <img
+                  v-if="project.imageUrl"
+                  :src="project.imageUrl"
+                  :alt="project.title"
+                  class="img-fluid rounded"
+              >
+            </div>
 
-        <h4>📌 프로젝트 소개</h4>
+            <div
+                v-if="project.techStack"
+                class="tech-stack-badges mt-3"
+            >
+              <span
+                  v-for="tag in techTags"
+                  :key="tag"
+              >
+                {{ tag }}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        <p>
-          {{ project.description }}
-        </p>
+        <div
+            class="col-lg-6"
+            data-aos="fade-left"
+        >
+          <div class="portfolio-details-content">
 
-        <hr>
+            <p
+                v-if="project.summary"
+                class="lead"
+            >
+              {{ project.summary }}
+            </p>
 
-        <h4>🛠 기술 스택</h4>
+            <h3>Overview</h3>
+            <p>{{ project.description }}</p>
 
-        <p>
-          {{ project.techStack }}
-        </p>
+            <ul class="list-unstyled">
+              <li v-if="project.period">
+                <strong>Period:</strong> {{ project.period }}
+              </li>
+              <li v-if="project.role">
+                <strong>Role:</strong> {{ project.role }}
+              </li>
+            </ul>
 
-        <hr>
+            <div class="mt-4">
+              <a
+                  v-if="project.githubUrl"
+                  :href="project.githubUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-dark me-2"
+              >
+                <i class="bi bi-github"></i> GitHub
+              </a>
+              <a
+                  v-if="project.demoUrl"
+                  :href="project.demoUrl"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-primary me-2"
+              >
+                Demo
+              </a>
+              <router-link
+                  to="/projects"
+                  class="btn btn-outline-secondary"
+              >
+                Back to Projects
+              </router-link>
+            </div>
 
-        <h4>📅 개발 기간</h4>
-
-        <p>
-          {{ project.period }}
-        </p>
-
-        <hr>
-
-        <h4>👨‍💻 담당 역할</h4>
-
-        <p>
-          {{ project.role }}
-        </p>
-
-        <hr>
-
-        <div class="mt-4">
-
-          <a
-              v-if="project.githubUrl"
-              :href="project.githubUrl"
-              target="_blank"
-              class="btn btn-dark me-2"
-          >
-            GitHub
-          </a>
-
-          <a
-              v-if="project.demoUrl"
-              :href="project.demoUrl"
-              target="_blank"
-              class="btn btn-danger me-2"
-          >
-            시연 영상
-          </a>
-
-          <router-link
-              to="/projects"
-              class="btn btn-secondary"
-          >
-            목록으로
-          </router-link>
-
+          </div>
         </div>
 
       </div>
 
     </div>
 
-  </div>
+  </section>
 
 </template>
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/api/axios'
 
 const route = useRoute()
-
 const project = ref({})
+
+const techTags = computed(() => {
+
+  if (!project.value.techStack) {
+    return []
+  }
+
+  return project.value.techStack
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean)
+})
 
 async function loadProject() {
 
   try {
 
-    const res =
-        await api.get(
-            `/api/projects/${route.params.id}`
-        )
+    const res = await api.get(
+        `/api/projects/${route.params.id}`
+    )
 
     project.value = res.data
 
@@ -113,10 +150,6 @@ async function loadProject() {
   }
 }
 
-onMounted(() => {
-
-  loadProject()
-
-})
+onMounted(loadProject)
 
 </script>

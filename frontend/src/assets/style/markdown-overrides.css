@@ -1,0 +1,46 @@
+/* github-markdown-css + Style 템플릿 변수 정합 */
+
+.markdown-body.post-markdown,
+.markdown-body.admin-markdown-preview {
+  color: #314862;
+  background-color: #ffffff;
+  color-scheme: light;
+}
+
+.markdown-body.post-markdown :is(p, li, td, th, blockquote),
+.markdown-body.admin-markdown-preview :is(p, li, td, th, blockquote) {
+  color: #314862;
+}
+
+.markdown-body.post-markdown :is(h1, h2, h3, h4, h5, h6),
+.markdown-body.admin-markdown-preview :is(h1, h2, h3, h4, h5, h6) {
+  color: #13447f;
+  border-bottom-color: color-mix(in srgb, #065cc2, transparent 80%);
+}
+
+.markdown-body.post-markdown a,
+.markdown-body.admin-markdown-preview a {
+  color: #065cc2;
+}
+
+.markdown-body.post-markdown code,
+.markdown-body.admin-markdown-preview code {
+  color: #13447f;
+  background-color: #f7faff;
+}
+
+.markdown-body.post-markdown pre,
+.markdown-body.admin-markdown-preview pre {
+  background-color: #f7faff;
+}
+
+.markdown-body.post-markdown pre code,
+.markdown-body.admin-markdown-preview pre code {
+  color: #314862;
+}
+
+.markdown-body.post-markdown blockquote,
+.markdown-body.admin-markdown-preview blockquote {
+  color: #4a6283;
+  border-left-color: #065cc2;
+}

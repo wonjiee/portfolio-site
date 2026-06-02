@@ -1,12 +1,11 @@
 package com.jiwon.portfolio.backend.controller;
 
 import com.jiwon.portfolio.backend.entity.Project;
-import com.jiwon.portfolio.backend.repository.ProjectRepository;
-
 import com.jiwon.portfolio.backend.service.ProjectService;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,40 +17,57 @@ public class ProjectController {
     private final ProjectService service;
 
     @GetMapping
-    public List<Project> getProjects(){
-
-        return service.getProjects();
+    public List<Project> findAll() {
+        return service.findAll();
     }
 
-    @PostMapping
-    public Project createProject(
-            @RequestBody Project project){
-
-        return service.createProject(project);
+    @GetMapping("/featured")
+    public List<Project> findFeatured() {
+        return service.findFeatured();
     }
 
     @GetMapping("/{id}")
-    public Project getProject(
-            @PathVariable Long id){
+    public Project findById(
+            @PathVariable Long id) {
 
-        return service.getProject(id);
+        return service.findById(id);
+    }
+
+    @PostMapping
+    public Project create(
+            @RequestBody Project project) {
+
+        try {
+            return service.create(project);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage()
+            );
+        }
     }
 
     @PutMapping("/{id}")
-    public Project updateProject(
+    public Project update(
             @PathVariable Long id,
-            @RequestBody Project project){
+            @RequestBody Project project) {
 
-        return service.updateProject(
-                id,
-                project);
+        try {
+            return service.update(
+                    id,
+                    project);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage()
+            );
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProject(
-            @PathVariable Long id){
+    public void delete(
+            @PathVariable Long id) {
 
-        service.deleteProject(id);
+        service.delete(id);
     }
-
 }

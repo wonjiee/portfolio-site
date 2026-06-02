@@ -57,8 +57,26 @@ Content-Type: application/json
 
 {
 "username":"admin",
-"password":"1234"
+"password":"ss6852"
 }
 
 ### 포스트
 GET http://localhost:8081/api/posts
+
+### 문의 등록 (공개)
+POST http://localhost:8081/api/contacts
+Content-Type: application/json
+
+{
+  "name": "홍길동",
+  "email": "visitor@example.com",
+  "message": "포트폴리오 잘 봤습니다. 협업 문의드립니다."
+}
+
+### 문의 목록 (관리자, JWT 필요)
+GET http://localhost:8081/api/contacts
+Authorization: Bearer {{token}}
+
+### 문의 삭제 (관리자)
+DELETE http://localhost:8081/api/contacts/1
+Authorization: Bearer {{token}}
