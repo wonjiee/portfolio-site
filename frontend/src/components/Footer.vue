@@ -1,25 +1,33 @@
 <template>
 
   <footer
-      class="border-top mt-5 py-4"
+      id="footer"
+      class="footer dark-background"
   >
 
-    <div class="container text-center">
+    <div class="container">
 
-      <p>
-        © 2026 Jiwon Eom Portfolio
-      </p>
+      <div class="copyright text-center">
+        <p>
+          © <strong class="px-1 sitename">Jiwon Eom</strong>
+          All Rights Reserved
+        </p>
+      </div>
 
-      <p>
-
+      <div class="social-links d-flex justify-content-center">
         <a
             href="https://github.com/wonjiee"
             target="_blank"
+            rel="noopener"
         >
-          GitHub
+          <i class="bi bi-github"></i>
         </a>
+      </div>
 
-      </p>
+      <div class="credits">
+        Designed by
+        <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
 
     </div>
 

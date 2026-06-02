@@ -3,7 +3,9 @@ package com.jiwon.portfolio.backend.controller;
 import com.jiwon.portfolio.backend.entity.Project;
 import com.jiwon.portfolio.backend.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,6 +21,11 @@ public class ProjectController {
         return service.findAll();
     }
 
+    @GetMapping("/featured")
+    public List<Project> findFeatured() {
+        return service.findFeatured();
+    }
+
     @GetMapping("/{id}")
     public Project findById(
             @PathVariable Long id) {
@@ -30,7 +37,14 @@ public class ProjectController {
     public Project create(
             @RequestBody Project project) {
 
-        return service.create(project);
+        try {
+            return service.create(project);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage()
+            );
+        }
     }
 
     @PutMapping("/{id}")
@@ -38,9 +52,16 @@ public class ProjectController {
             @PathVariable Long id,
             @RequestBody Project project) {
 
-        return service.update(
-                id,
-                project);
+        try {
+            return service.update(
+                    id,
+                    project);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage()
+            );
+        }
     }
 
     @DeleteMapping("/{id}")

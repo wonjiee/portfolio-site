@@ -12,11 +12,7 @@ import lombok.Setter;
 public class Project {
 
     @Id
-
-    @GeneratedValue(strategy =
-
-            GenerationType.IDENTITY)
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -38,4 +34,9 @@ public class Project {
 
     private String role;
 
+    /** 작을수록 목록 앞쪽 */
+    private int sortOrder;
+
+    /** 홈 화면 추천 (최대 3개) */
+    private boolean featured;
 }

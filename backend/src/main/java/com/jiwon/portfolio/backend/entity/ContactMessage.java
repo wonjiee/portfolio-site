@@ -11,24 +11,20 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Post {
+public class ContactMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String name;
+
+    private String email;
 
     @Column(columnDefinition = "TEXT")
-    private String content;
+    private String message;
 
     private LocalDateTime createdAt;
-
-    /** 작을수록 목록 앞쪽 (고정 글 다음) */
-    private int sortOrder;
-
-    /** 목록 상단 고정 */
-    private boolean pinned;
 
     @PrePersist
     public void prePersist() {

@@ -1,0 +1,163 @@
+/* Admin area — uses Style template CSS variables */
+
+body.admin-page {
+  --background-color: #f7faff;
+  background-color: var(--background-color);
+}
+
+.admin-main {
+  min-height: calc(100vh - 72px);
+  padding-bottom: 3rem;
+}
+
+.admin-bar {
+  position: sticky;
+  top: 0;
+  z-index: 996;
+  background-color: #11427d;
+  color: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.admin-bar a {
+  color: #ffffff;
+}
+
+.admin-bar-brand {
+  color: #ffffff !important;
+  font-weight: 600;
+  font-family: var(--heading-font);
+  text-decoration: none;
+}
+
+.admin-bar-brand:hover {
+  color: #e8f2ff !important;
+}
+
+.admin-nav-link {
+  color: #ffffff !important;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: var(--nav-font);
+  text-decoration: none;
+  opacity: 0.92;
+}
+
+.admin-nav-link:hover,
+.admin-nav-link.router-link-active,
+.admin-nav-link.active {
+  color: #ffffff !important;
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.admin-logout-btn {
+  background: #ffffff;
+  color: #11427d !important;
+  border: none;
+  font-weight: 600;
+}
+
+.admin-logout-btn:hover {
+  background: #e8f2ff;
+  color: #065cc2 !important;
+}
+
+.admin-mobile-toggle {
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: transparent;
+}
+
+.admin-mobile-menu {
+  padding: 0.5rem 1rem 1rem;
+  background-color: #11427d;
+}
+
+.admin-mobile-link {
+  display: block;
+  color: #ffffff !important;
+  padding: 0.65rem 0.5rem;
+  border: none;
+  background: transparent;
+  text-decoration: none;
+}
+
+.admin-mobile-link:hover {
+  color: #e8f2ff !important;
+}
+
+.admin-page-title h1 {
+  font-family: var(--heading-font);
+  color: var(--heading-color);
+}
+
+.admin-section .admin-card {
+  background: var(--surface-color);
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 85%);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(19, 68, 127, 0.06);
+}
+
+.admin-section .admin-card .card-body {
+  padding: 1.25rem;
+}
+
+.admin-dashboard-tile {
+  display: block;
+  padding: 1.5rem;
+  background: var(--surface-color);
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 85%);
+  border-radius: 8px;
+  text-align: center;
+  transition: 0.3s;
+  color: var(--heading-color);
+  font-family: var(--heading-font);
+  font-weight: 600;
+}
+
+.admin-dashboard-tile:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(6, 92, 194, 0.12);
+  color: var(--accent-color);
+}
+
+.admin-dashboard-tile i {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--accent-color);
+}
+
+.admin-form-panel {
+  background: var(--surface-color);
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 85%);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-form-panel .btn-primary {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.admin-form-panel .btn-primary:hover {
+  background-color: color-mix(in srgb, var(--accent-color), #000 12%);
+  border-color: color-mix(in srgb, var(--accent-color), #000 12%);
+}
+
+@media (max-width: 991px) {
+  .admin-bar-nav {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .admin-mobile-toggle,
+  .admin-mobile-menu {
+    display: none !important;
+  }
+}

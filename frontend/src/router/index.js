@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import AOS from 'aos'
 
 import { useAuthStore } from '@/stores/auth'
 import { isTokenExpired } from '@/utils/token'
@@ -10,6 +11,7 @@ import LoginView from "@/views/admin/LoginView.vue";
 import AdminDashboardView from "@/views/admin/AdminDashboardView.vue";
 import PostManageView from '@/views/admin/PostManageView.vue'
 import ProjectManageView from "@/views/admin/ProjectManageView.vue";
+import ContactManageView from '@/views/admin/ContactManageView.vue'
 import ProjectListView from "@/views/public/ProjectListView.vue";
 import ProjectDetailView from "@/views/public/ProjectDetailView.vue";
 
@@ -56,6 +58,10 @@ const router = createRouter({
     {
       path: '/admin/posts',
       component: PostManageView
+    },
+    {
+      path: '/admin/contacts',
+      component: ContactManageView
     }
   ]
 })
@@ -76,6 +82,21 @@ router.beforeEach((to, from, next) => {
   }
 
   next()
+})
+
+router.afterEach((to) => {
+
+  setTimeout(() => AOS.refresh(), 100)
+
+  if (to.hash === '#contact' && to.path === '/') {
+
+    setTimeout(() => {
+
+      document.querySelector('#contact')?.scrollIntoView({
+        behavior: 'smooth'
+      })
+    }, 300)
+  }
 })
 
 export default router

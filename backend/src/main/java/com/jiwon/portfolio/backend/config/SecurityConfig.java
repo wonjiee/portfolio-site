@@ -99,6 +99,17 @@ public class SecurityConfig {
                         )
                         .authenticated()
 
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/contacts"
+                        )
+                        .permitAll()
+
+                        .requestMatchers(
+                                "/api/contacts/**"
+                        )
+                        .authenticated()
+
                         .anyRequest()
                         .authenticated())
                 .addFilterBefore(
