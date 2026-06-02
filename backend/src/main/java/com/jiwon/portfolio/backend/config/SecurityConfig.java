@@ -125,7 +125,9 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(
-                List.of("http://localhost:5173"));
+                List.of("http://localhost:5173",
+                        "https://portfolio-site-xi-nine-99.vercel.app/"
+                ));
 
         config.setAllowedMethods(
                 List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
