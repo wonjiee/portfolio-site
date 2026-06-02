@@ -2,17 +2,23 @@ spring:
   application:
     name: backend
 
-  config:
-    import: optional:application-secret.yaml
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
-
     show-sql: true
 
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: 3600000
+
 server:
-  port: 8081
+  port: ${PORT:8081}
 
   servlet:
     encoding:

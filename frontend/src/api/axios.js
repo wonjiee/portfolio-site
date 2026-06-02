@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/auth'
 
 const api = axios.create({
 
-    baseURL: 'http://localhost:8081'
+    baseURL: 'https://portfolio-site-vqqy.onrender.com'
 })
 
 api.interceptors.request.use(

@@ -15,9 +15,10 @@
         >
           <div class="content-wrapper">
             <h1 class="hero-title">
-              Jiwon Eom —
-              <span>Game Developer &
-                Computer Science Student</span>
+              <span class="hero-title-name">Jiwon Eom</span>
+              <span class="hero-title-sep"></span>
+              <br>
+              <span class="hero-title-sub">Game Developer &amp;<br class="d-sm-none"> Computer Science Student</span>
             </h1>
             <p class="lead">
               컴퓨터공학을 전공하며 Unity 기반 게임 개발과 소프트웨어 개발을 공부하고 있습니다.
@@ -134,15 +135,28 @@
             <div class="intro">
               <h2>안녕하세요, 엄지원입니다</h2>
               <p>
-                대학교에서 컴퓨터 공학을 전공하며
-                게임 개발, 알고리즘, 네트워크, 데이터베이스 등
-                다양한 분야를 학습했습니다.
+                머릿속 아이디어를 실제로 구현하여 사람들이 직접 경험할 수 있는 결과물로 만드는 것을 좋아합니다.
               </p>
               <p>
-                개인 프로젝트와 팀 프로젝트를 통해
-                기획부터 구현까지의 과정을 경험했으며,
-                문제를 분석하고 해결하는 과정에 큰 흥미를 가지고 있습니다.
+                게임 개발을 중심으로 다양한 프로젝트를 진행하며 기획부터 구현까지의 과정을 경험하고 있으며, 최근에는 절차적 콘텐츠 생성과 같은 기술을 활용해 더욱 흥미로운 경험을 만드는 방법에 관심을 가지고 있습니다.
               </p>
+              <p>
+                새로운 기술을 배우고 이를 프로젝트에 적용하며 꾸준히 성장하는 개발자를 목표로 하고 있습니다.
+              </p>
+            </div>
+
+            <div class="journey-timeline">
+              <div
+                  v-for="item in journeyTimeline"
+                  :key="`${item.year}-${item.title}`"
+                  class="timeline-item"
+              >
+                <div class="year">{{ item.year }}</div>
+                <div class="description">
+                  <strong>{{ item.title }}</strong>
+                  <div class="small text-muted mt-1">{{ item.detail }}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -470,6 +484,19 @@ const contactSending = ref(false)
 const contactSuccess = ref('')
 const contactError = ref('')
 
+const journeyTimeline = [
+  {
+    year: '2024.09 - Present',
+    title: '부경대학교 프로그래밍 동아리 WAP',
+    detail: '게임 개발 및 알고리즘 스터디 참여'
+  },
+  {
+    year: '2021.03 - Present',
+    title: '부경대학교 컴퓨터 공학 전공',
+    detail: '학사 과정 재학 중'
+  }
+]
+
 const skillCategories = [
   {
     title: 'Game',
@@ -592,6 +619,26 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.hero-title-name {
+  display: inline-block;
+}
+
+.hero-title-sep {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--heading-color), transparent 35%);
+}
+
+.hero-title-sub {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.72em;
+  font-weight: 600;
+  line-height: 1.25;
+  color: color-mix(in srgb, var(--default-color), transparent 10%);
+}
+
 .skills-intro {
   max-width: 36rem;
   margin-left: auto;
