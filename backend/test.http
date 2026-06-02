@@ -48,7 +48,7 @@ Content-Type: application/json
 
 {
   "username": "admin",
-  "password": "ss6852"
+  "password": "1234"
 }
 
 ### 로그인
@@ -57,7 +57,7 @@ Content-Type: application/json
 
 {
 "username":"admin",
-"password":"ss6852"
+"password":"1234"
 }
 
 ### 포스트
@@ -80,3 +80,12 @@ Authorization: Bearer {{token}}
 ### 문의 삭제 (관리자)
 DELETE http://localhost:8081/api/contacts/1
 Authorization: Bearer {{token}}
+
+###
+POST https://portfolio-site-0ow1.onrender.com/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "1234"
+}

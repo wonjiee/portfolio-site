@@ -126,7 +126,7 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(
                 List.of("http://localhost:5173",
-                        "https://portfolio-site-xi-nine-99.vercel.app/"
+                        "https://wonjiee.vercel.app"
                 ));
 
         config.setAllowedMethods(
