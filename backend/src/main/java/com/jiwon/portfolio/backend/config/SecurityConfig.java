@@ -46,10 +46,16 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/login",
-                                "/api/auth/signup")
+                        .requestMatchers("/", "/health")
                         .permitAll()
+
+                        .requestMatchers(
+                                "/api/auth/login")
+                        .permitAll()
+
+                        /*.requestMatchers(
+                                "/api/auth/signup")
+                        .permitAll()*/ 
 
                         .requestMatchers(
                                 HttpMethod.GET,

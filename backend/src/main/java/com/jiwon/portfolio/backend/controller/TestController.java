@@ -8,12 +8,11 @@ public class TestController {
 
     @GetMapping("/")
     public String home() {
-        return "Backend Success!";
+        return "Portfolio Backend Running";
     }
 
-    @GetMapping("/api/test")
-    public String test(){
-        return "백엔드 연결 성공";
+    @GetMapping("/health")
+    public String health() {
+        return "OK";
     }
-
 }
