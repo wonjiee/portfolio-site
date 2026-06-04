@@ -4,3 +4,4 @@
 https://vercel.com
 https://render.com
 https://railway.com
+https://uptimerobot.com
