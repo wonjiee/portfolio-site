@@ -20,6 +20,15 @@ export function initAos() {
   aosInitialized = true
 }
 
+export function refreshAos() {
+
+  if (!aosInitialized) {
+    return
+  }
+
+  AOS.refresh()
+}
+
 export function useTemplateEffects() {
 
   function toggleScrolled() {

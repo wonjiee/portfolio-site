@@ -8,6 +8,7 @@ import '@/assets/style/main.css'
 import '@/assets/style/admin.css'
 import 'github-markdown-css/github-markdown.css'
 import '@/assets/style/markdown-overrides.css'
+import '@/assets/style/list-reveal.css'
 
 import App from './App.vue'
 import router from './router'

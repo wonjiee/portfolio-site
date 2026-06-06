@@ -18,21 +18,59 @@
         class="container"
         data-aos="fade-up"
     >
-      <p class="text-muted mb-4">
-        {{ formatDate(post.createdAt) }}
+
+      <p
+          v-if="loading"
+          class="text-muted"
+      >
+        불러오는 중…
       </p>
 
-      <article
-          class="markdown-body post-markdown"
-          v-html="renderedContent"
-      />
-
-      <router-link
-          to="/posts"
-          class="btn btn-outline-primary mt-4"
+      <div
+          v-else-if="notFound"
+          class="text-center py-5"
       >
-        목록으로
-      </router-link>
+        <p class="lead mb-4">게시글을 찾을 수 없습니다.</p>
+        <router-link
+            to="/posts"
+            class="btn btn-outline-primary"
+        >
+          블로그 목록으로
+        </router-link>
+      </div>
+
+      <div
+          v-else-if="loadError"
+          class="text-center py-5"
+      >
+        <p class="lead mb-4 text-danger">게시글을 불러오지 못했습니다.</p>
+        <button
+            class="btn btn-outline-primary"
+            type="button"
+            @click="loadPost"
+        >
+          다시 시도
+        </button>
+      </div>
+
+      <template v-else>
+        <p class="text-muted mb-4">
+          {{ formatDate(post.createdAt) }}
+        </p>
+
+        <article
+            class="markdown-body post-markdown"
+            v-html="renderedContent"
+        />
+
+        <router-link
+            to="/posts"
+            class="btn btn-outline-primary mt-4"
+        >
+          목록으로
+        </router-link>
+      </template>
+
     </div>
   </section>
 
@@ -40,13 +78,16 @@
 
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/api/axios'
 import { renderMarkdown } from '@/utils/markdown'
 
 const route = useRoute()
 const post = ref({})
+const loading = ref(true)
+const notFound = ref(false)
+const loadError = ref(false)
 
 const renderedContent = computed(() => {
 
@@ -62,6 +103,11 @@ function formatDate(date) {
 
 async function loadPost() {
 
+  loading.value = true
+  notFound.value = false
+  loadError.value = false
+  post.value = {}
+
   try {
 
     const res = await api.get(`/api/posts/${route.params.id}`)
@@ -69,11 +115,24 @@ async function loadPost() {
 
   } catch (error) {
 
-    console.error(error)
+    if (error.response?.status === 404) {
+      notFound.value = true
+    } else {
+      loadError.value = true
+      console.error(error)
+    }
+
+  } finally {
+
+    loading.value = false
   }
 }
 
-onMounted(loadPost)
+watch(
+    () => route.params.id,
+    loadPost,
+    { immediate: true }
+)
 
 </script>
 

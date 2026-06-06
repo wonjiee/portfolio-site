@@ -236,48 +236,46 @@
     >
 
       <p
-          v-if="featuredProjects.length === 0"
+          v-if="featuredLoading"
+          class="text-center text-muted py-4"
+      >
+        불러오는 중…
+      </p>
+
+      <div
+          v-else
+          class="row g-4"
+      >
+        <div
+            v-for="(project, index) in featuredProjects"
+            :key="project.id"
+            class="col-xl-4 col-md-6"
+            data-aos="fade-up"
+            :data-aos-delay="100 + index * 80"
+        >
+          <PortfolioCard
+              :project="project"
+              featured
+              :revealed="isRevealed(project.id)"
+              @click="onCardClick(project.id, $event)"
+          />
+        </div>
+      </div>
+
+      <p
+          v-if="!featuredLoading && featuredProjects.length === 0"
           class="text-center text-muted mb-4"
+          data-aos="fade-up"
       >
         추천으로 설정된 프로젝트가 없습니다.
       </p>
 
-      <div class="row g-4">
-
-        <div
-            v-for="project in featuredProjects"
-            :key="project.id"
-            class="col-xl-4 col-md-6"
-        >
-          <article class="portfolio-entry">
-            <figure class="entry-image">
-              <img
-                  :src="projectImage(project)"
-                  class="img-fluid"
-                  :alt="project.title"
-                  loading="lazy"
-              >
-              <div class="entry-overlay">
-                <div class="overlay-content">
-                  <div class="entry-meta">{{ project.techStack }}</div>
-                  <h3 class="entry-title">
-                    {{ project.title }}
-                    <span class="badge bg-warning text-dark ms-1">추천</span>
-                  </h3>
-                  <div class="entry-links">
-                    <router-link :to="`/projects/${project.id}`">
-                      <i class="bi bi-arrow-right"></i>
-                    </router-link>
-                  </div>
-                </div>
-              </div>
-            </figure>
-          </article>
-        </div>
-
-      </div>
-
-      <div class="text-center mt-4">
+      <div
+          v-if="!featuredLoading"
+          class="text-center mt-4"
+          data-aos="fade-up"
+          data-aos-delay="150"
+      >
         <router-link
             to="/projects"
             class="btn btn-primary"
@@ -303,31 +301,45 @@
         data-aos="fade-up"
     >
 
-      <div
-          v-for="post in posts.slice(0, 3)"
-          :key="post.id"
-          class="mb-3"
+      <p
+          v-if="postsLoading"
+          class="text-muted py-4"
       >
-        <router-link
-            :to="`/posts/${post.id}`"
-            class="text-decoration-none"
+        불러오는 중…
+      </p>
+
+      <div v-else>
+        <div
+            v-for="(post, index) in previewPosts"
+            :key="post.id"
+            class="mb-3"
+            data-aos="fade-up"
+            :data-aos-delay="100 + index * 80"
         >
-          <h5>
-            <span
-                v-if="post.pinned"
-                class="badge bg-primary me-1"
-            >고정</span>
-            {{ post.title }}
-          </h5>
-        </router-link>
-        <p class="text-muted small mb-0">
-          {{ formatDate(post.createdAt) }}
-        </p>
+          <router-link
+              :to="`/posts/${post.id}`"
+              class="text-decoration-none"
+          >
+            <h5>
+              <span
+                  v-if="post.pinned"
+                  class="badge bg-primary me-1"
+              >고정</span>
+              {{ post.title }}
+            </h5>
+          </router-link>
+          <p class="text-muted small mb-0">
+            {{ formatDate(post.createdAt) }}
+          </p>
+        </div>
       </div>
 
       <router-link
+          v-if="!postsLoading"
           to="/posts"
           class="btn btn-outline-primary mt-2"
+          data-aos="fade-up"
+          data-aos-delay="150"
       >
         전체 글 보기
       </router-link>
@@ -465,14 +477,22 @@
 
 <script setup>
 
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/api/axios'
+import { usePortfolioCardReveal } from '@/composables/usePortfolioCardReveal'
+import { refreshAos } from '@/composables/useTemplateEffects'
+import PortfolioCard from '@/components/PortfolioCard.vue'
 
 const route = useRoute()
+const { isRevealed, onCardClick } = usePortfolioCardReveal()
 
 const featuredProjects = ref([])
 const posts = ref([])
+const featuredLoading = ref(true)
+const postsLoading = ref(true)
+
+const previewPosts = computed(() => posts.value.slice(0, 3))
 
 const contactForm = ref({
   name: '',
@@ -524,11 +544,6 @@ const skillCategories = [
   }
 ]
 
-function projectImage(project) {
-
-  return project.imageUrl || '/style/img/abstract-bg-1.webp'
-}
-
 function formatDate(date) {
 
   if (!date) return ''
@@ -545,6 +560,8 @@ function scrollToContact() {
 
 async function loadFeaturedProjects() {
 
+  featuredLoading.value = true
+
   try {
 
     const res = await api.get('/api/projects/featured')
@@ -553,10 +570,16 @@ async function loadFeaturedProjects() {
   } catch (error) {
 
     console.error(error)
+
+  } finally {
+
+    featuredLoading.value = false
   }
 }
 
 async function loadPosts() {
+
+  postsLoading.value = true
 
   try {
 
@@ -566,6 +589,10 @@ async function loadPosts() {
   } catch (error) {
 
     console.error(error)
+
+  } finally {
+
+    postsLoading.value = false
   }
 }
 
@@ -608,10 +635,11 @@ async function submitContact() {
 onMounted(async () => {
 
   await Promise.all([loadFeaturedProjects(), loadPosts()])
+  await nextTick()
+  refreshAos()
 
   if (route.hash === '#contact') {
 
-    await nextTick()
     scrollToContact()
   }
 })

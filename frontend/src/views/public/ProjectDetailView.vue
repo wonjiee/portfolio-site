@@ -20,7 +20,44 @@
         data-aos="fade-up"
     >
 
-      <div class="row gy-4">
+      <p
+          v-if="loading"
+          class="text-muted"
+      >
+        불러오는 중…
+      </p>
+
+      <div
+          v-else-if="notFound"
+          class="text-center py-5"
+      >
+        <p class="lead mb-4">프로젝트를 찾을 수 없습니다.</p>
+        <router-link
+            to="/projects"
+            class="btn btn-outline-primary"
+        >
+          프로젝트 목록으로
+        </router-link>
+      </div>
+
+      <div
+          v-else-if="loadError"
+          class="text-center py-5"
+      >
+        <p class="lead mb-4 text-danger">프로젝트를 불러오지 못했습니다.</p>
+        <button
+            class="btn btn-outline-primary"
+            type="button"
+            @click="loadProject"
+        >
+          다시 시도
+        </button>
+      </div>
+
+      <div
+          v-else
+          class="row gy-4"
+      >
 
         <div
             class="col-lg-6"
@@ -31,6 +68,12 @@
               <img
                   v-if="project.imageUrl"
                   :src="project.imageUrl"
+                  :alt="project.title"
+                  class="img-fluid rounded"
+              >
+              <img
+                  v-else
+                  src="/style/img/abstract-bg-1.webp"
                   :alt="project.title"
                   class="img-fluid rounded"
               >
@@ -115,26 +158,25 @@
 
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/api/axios'
+import { parseTechStack } from '@/utils/project'
 
 const route = useRoute()
 const project = ref({})
+const loading = ref(true)
+const notFound = ref(false)
+const loadError = ref(false)
 
-const techTags = computed(() => {
-
-  if (!project.value.techStack) {
-    return []
-  }
-
-  return project.value.techStack
-      .split(',')
-      .map((t) => t.trim())
-      .filter(Boolean)
-})
+const techTags = computed(() => parseTechStack(project.value.techStack))
 
 async function loadProject() {
+
+  loading.value = true
+  notFound.value = false
+  loadError.value = false
+  project.value = {}
 
   try {
 
@@ -146,10 +188,23 @@ async function loadProject() {
 
   } catch (error) {
 
-    console.error(error)
+    if (error.response?.status === 404) {
+      notFound.value = true
+    } else {
+      loadError.value = true
+      console.error(error)
+    }
+
+  } finally {
+
+    loading.value = false
   }
 }
 
-onMounted(loadProject)
+watch(
+    () => route.params.id,
+    loadProject,
+    { immediate: true }
+)
 
 </script>

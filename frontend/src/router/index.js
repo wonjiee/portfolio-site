@@ -14,9 +14,23 @@ import ProjectManageView from "@/views/admin/ProjectManageView.vue";
 import ContactManageView from '@/views/admin/ContactManageView.vue'
 import ProjectListView from "@/views/public/ProjectListView.vue";
 import ProjectDetailView from "@/views/public/ProjectDetailView.vue";
+import NotFoundView from '@/views/public/NotFoundView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+
+  scrollBehavior(to, from, savedPosition) {
+
+    if (savedPosition) {
+      return savedPosition
+    }
+
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth' }
+    }
+
+    return { top: 0 }
+  },
 
   routes: [
     {
@@ -62,6 +76,12 @@ const router = createRouter({
     {
       path: '/admin/contacts',
       component: ContactManageView
+    },
+
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: NotFoundView
     }
   ]
 })
