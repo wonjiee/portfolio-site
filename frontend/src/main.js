@@ -14,18 +14,21 @@ import App from './App.vue'
 import router from './router'
 import { inject } from '@vercel/analytics'
 import {
-  disableBrowserScrollRestoration,
-  scrollToPageTop
+  forceScrollToTopOnReload,
+  initScrollToTopOnReload
 } from '@/utils/navigation'
 
 inject()
 
-disableBrowserScrollRestoration()
-scrollToPageTop()
+initScrollToTopOnReload()
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+
+router.isReady().then(() => {
+  forceScrollToTopOnReload()
+})
 
 app.mount('#app')
