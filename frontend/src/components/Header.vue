@@ -9,120 +9,138 @@
         class="container-fluid position-relative d-flex align-items-center justify-content-between"
     >
 
-      <router-link
-          to="/"
+      <a
+          href="/"
           class="logo d-flex align-items-center"
-          @click="closeMobileNav"
+          @click="navigateFromMenu('/', $event)"
       >
         <h1 class="sitename mb-0">Jiwon</h1>
-      </router-link>
+      </a>
 
-      <nav
-          id="navmenu"
-          class="navmenu"
+      <button
+          type="button"
+          class="mobile-nav-toggle"
+          aria-label="Open navigation"
+          :aria-expanded="menuOpen"
+          @click="toggleMobileNav"
       >
-
-        <div class="profile-img">
-          <img
-              src="/style/img/profile/profile2.jpeg"
-              alt="Profile"
-              class="img-fluid rounded-circle"
-          >
-        </div>
-
-        <router-link
-            to="/"
-            class="logo d-flex align-items-center justify-content-center"
-            :class="{ active: route.path === '/' }"
-            @click="closeMobileNav"
-        >
-          <h1 class="sitename">Jiwon Eom</h1>
-        </router-link>
-
-        <div class="social-links text-center">
-          <a
-              href="https://github.com/wonjiee"
-              target="_blank"
-              rel="noopener"
-              class="github"
-          >
-            <i class="bi bi-github"></i>
-          </a>
-        </div>
-
-        <ul>
-          <li>
-            <router-link
-                to="/"
-                :class="{ active: route.path === '/' }"
-                @click="closeMobileNav"
-            >
-              Home
-            </router-link>
-          </li>
-          <li>
-            <router-link
-                to="/projects"
-                :class="{ active: route.path.startsWith('/projects') }"
-                @click="closeMobileNav"
-            >
-              Projects
-            </router-link>
-          </li>
-          <li>
-            <router-link
-                to="/posts"
-                :class="{ active: route.path.startsWith('/posts') }"
-                @click="closeMobileNav"
-            >
-              Blog
-            </router-link>
-          </li>
-          <li>
-            <a
-                href="/#contact"
-                @click="goContact"
-            >
-              Contact
-            </a>
-          </li>
-          <li v-if="!authStore.isAuthenticated">
-            <router-link
-                to="/login"
-                @click="closeMobileNav"
-            >
-              Admin
-            </router-link>
-          </li>
-          <li v-else>
-            <router-link
-                to="/admin"
-                @click="closeMobileNav"
-            >
-              Dashboard
-            </router-link>
-          </li>
-        </ul>
-
-        <i
-            class="mobile-nav-toggle d-xl-none bi"
-            :class="menuOpen ? 'bi-x' : 'bi-list'"
-            role="button"
-            aria-label="Toggle navigation"
-            @click="toggleMobileNav"
-        ></i>
-
-      </nav>
+        <i class="bi bi-list"></i>
+      </button>
 
     </div>
 
   </header>
 
+  <Teleport to="body">
+
+    <nav
+        id="navmenu"
+        class="navmenu"
+        :class="{ 'navmenu-open': menuOpen }"
+        @click.stop
+    >
+
+      <button
+          type="button"
+          class="mobile-nav-close"
+          aria-label="Close navigation"
+          @click="closeMobileNav"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <div class="profile-img">
+        <img
+            src="/style/img/profile/profile2.jpeg"
+            alt="Profile"
+            class="img-fluid rounded-circle"
+        >
+      </div>
+
+      <a
+          href="/"
+          class="logo d-flex align-items-center justify-content-center"
+          :class="{ active: route.path === '/' }"
+          @click="navigateFromMenu('/', $event)"
+      >
+        <h1 class="sitename">Jiwon Eom</h1>
+      </a>
+
+      <div class="social-links text-center">
+        <a
+            href="https://github.com/wonjiee"
+            target="_blank"
+            rel="noopener"
+            class="github"
+            @click="closeMobileNav"
+        >
+          <i class="bi bi-github"></i>
+        </a>
+      </div>
+
+      <ul>
+        <li>
+          <a
+              href="/"
+              :class="{ active: route.path === '/' }"
+              @click="navigateFromMenu('/', $event)"
+          >
+            Home
+          </a>
+        </li>
+        <li>
+          <a
+              href="/projects"
+              :class="{ active: route.path.startsWith('/projects') }"
+              @click="navigateFromMenu('/projects', $event)"
+          >
+            Projects
+          </a>
+        </li>
+        <li>
+          <a
+              href="/posts"
+              :class="{ active: route.path.startsWith('/posts') }"
+              @click="navigateFromMenu('/posts', $event)"
+          >
+            Blog
+          </a>
+        </li>
+        <li>
+          <a
+              href="/#contact"
+              @click="goContact"
+          >
+            Contact
+          </a>
+        </li>
+        <li v-if="!authStore.isAuthenticated">
+          <a
+              href="/login"
+              @click="navigateFromMenu('/login', $event)"
+          >
+            Admin
+          </a>
+        </li>
+        <li v-else>
+          <a
+              href="/admin"
+              @click="navigateFromMenu('/admin', $event)"
+          >
+            Dashboard
+          </a>
+        </li>
+      </ul>
+
+    </nav>
+
+  </Teleport>
+
 </template>
 
 <script setup>
 
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { initAos } from '@/composables/useTemplateEffects'
@@ -148,31 +166,72 @@ function closeMobileNav() {
   document.body.classList.remove('mobile-nav-active')
 }
 
+function onDocumentClick(event) {
+
+  if (!menuOpen.value) {
+    return
+  }
+
+  const nav = document.getElementById('navmenu')
+  const toggle = event.target.closest('.mobile-nav-toggle')
+
+  if (toggle || nav?.contains(event.target)) {
+    return
+  }
+
+  closeMobileNav()
+}
+
+function navigateFromMenu(path, event) {
+
+  event.preventDefault()
+  closeMobileNav()
+
+  if (path === '/') {
+
+    if (route.path === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+
+    router.push('/').then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    })
+    return
+  }
+
+  router.push(path)
+}
+
 function goContact(event) {
 
+  event.preventDefault()
   closeMobileNav()
 
   if (route.path === '/') {
 
-    event.preventDefault()
     document.querySelector('#contact')?.scrollIntoView({
       behavior: 'smooth'
     })
     return
   }
 
-  router.push('/#contact')
+  router.push({ path: '/', hash: '#contact' })
 }
+
+watch(() => route.path, closeMobileNav)
 
 onMounted(() => {
 
   closeMobileNav()
   initAos()
+  document.addEventListener('click', onDocumentClick)
 })
 
 onUnmounted(() => {
 
   closeMobileNav()
+  document.removeEventListener('click', onDocumentClick)
 })
 
 </script>

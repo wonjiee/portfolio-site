@@ -37,6 +37,7 @@
   --nav-dropdown-background-color: #065cc2; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
   --nav-dropdown-color: #acc4e0; /* Used for navigation links of the dropdown items in the navigation menu. */
   --nav-dropdown-hover-color: #ffffff; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --navmenu-width: min(300px, 85vw);
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
@@ -146,12 +147,29 @@ h6 {
 # Global Header
 --------------------------------------------------------------*/
 .header {
-  --background-color: rgba(255, 255, 255, 0);
+  --header-height: 72px;
+  --background-color: rgba(255, 255, 255, 0.88);
   color: var(--default-color);
-  background-color: var(--background-color);
+  background-color: transparent;
   padding: 15px 0;
   transition: all 0.5s;
   z-index: 997;
+  box-shadow: 0 1px 12px rgba(19, 68, 127, 0.08);
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--background-color);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: -1;
+}
+
+body.scrolled .header {
+  --background-color: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 2px 20px rgba(19, 68, 127, 0.12);
 }
 
 .header .logo {
@@ -174,17 +192,54 @@ h6 {
 # Navigation Menu
 --------------------------------------------------------------*/
 /* Navmenu */
+.mobile-nav-toggle,
+.mobile-nav-close {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav-close {
+  position: absolute;
+  top: 18px;
+  left: 14px;
+  display: flex;
+  color: var(--contrast-color);
+  background: transparent;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.mobile-nav-close:hover {
+  color: var(--nav-dropdown-hover-color);
+}
+
+.mobile-nav-toggle i,
+.mobile-nav-close i {
+  color: inherit;
+  line-height: 1;
+}
+
 .mobile-nav-toggle {
   color: var(--nav-color);
   position: fixed;
-  top: 20px;
-  right: 20px;
-  font-size: 32px;
-  line-height: 0;
-  cursor: pointer;
-  display: block !important;
-  z-index: 998;
-  transition: 0.3s;
+  top: 18px;
+  right: 18px;
+  display: flex !important;
+  background: transparent;
+  z-index: 1002;
+  transition: color 0.3s ease;
+}
+
+.mobile-nav-active .mobile-nav-toggle {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .mobile-nav-toggle:hover {
@@ -194,12 +249,22 @@ h6 {
 .navmenu {
   position: fixed;
   top: 0;
+  right: calc(-1 * var(--navmenu-width));
   bottom: 0;
-  right: -300px;
-  z-index: 997;
-  transition: 0.3s;
-  width: 300px;
-  overflow: hidden;
+  z-index: 999;
+  transition: right 0.3s ease;
+  width: var(--navmenu-width);
+  padding-top: 70px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--nav-mobile-background-color);
+  pointer-events: auto;
+}
+
+.navmenu.navmenu-open,
+.mobile-nav-active .navmenu {
+  right: 0;
 }
 
 .navmenu .profile-img img {
@@ -328,24 +393,6 @@ h6 {
   border: 1px solid color-mix(in srgb, var(--nav-dropdown-color), transparent 90%);
 }
 
-.mobile-nav-active {
-  overflow: hidden;
-}
-
-.mobile-nav-active .mobile-nav-toggle {
-  right: 310px;
-  font-size: 36px;
-}
-
-.mobile-nav-active .navmenu {
-  position: fixed;
-  overflow: hidden;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  background-color: var(--nav-mobile-background-color);
-  transition: 0.3s;
-}
 
 /*--------------------------------------------------------------
 # Global Footer
@@ -1844,40 +1891,102 @@ section,
 .portfolio .portfolio-entry .entry-image .entry-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  background: rgba(8, 12, 20, 0.78);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: flex-end;
-  padding: 30px;
+  padding: 0;
   opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(12px);
+  transition:
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .portfolio .portfolio-entry .entry-image .entry-overlay .overlay-content {
   width: 100%;
-  transform: translateY(20px);
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  transform: translateY(16px);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.portfolio .portfolio-entry .entry-image .entry-overlay .entry-meta {
-  color: var(--accent-color);
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
+.portfolio .portfolio-entry .entry-image .entry-overlay .entry-tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+}
+
+.portfolio .portfolio-entry .entry-image .entry-overlay .entry-tech-tags li {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-color) 88%, #000 12%);
+  color: var(--contrast-color);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.portfolio .portfolio-entry .entry-image .entry-overlay .entry-tech-tags .entry-tech-more {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .portfolio .portfolio-entry .entry-image .entry-overlay .entry-title {
   color: var(--contrast-color);
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
-  margin: 0 0 20px;
+  line-height: 1.3;
+  margin: 0;
+  width: 100%;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+.portfolio .portfolio-entry .entry-image .entry-overlay .entry-featured-badge {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: #ffc107;
+  color: #1a1a1a;
+  font-size: 0.45em;
+  font-weight: 700;
+  vertical-align: middle;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+.portfolio .portfolio-entry .entry-image .entry-overlay .entry-summary {
+  margin: 0;
+  width: 100%;
+  min-height: calc(1.45em * 2);
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.9);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
 }
 
 .portfolio .portfolio-entry .entry-image .entry-overlay .entry-links {
   display: flex;
-  gap: 15px;
+  gap: 12px;
+  margin-top: 2px;
 }
 
 .portfolio .portfolio-entry .entry-image .entry-overlay .entry-links a {
@@ -1909,32 +2018,63 @@ section,
   transition-delay: 0.2s;
 }
 
-.portfolio .portfolio-entry:hover .entry-image img {
+@media (hover: hover) and (pointer: fine) {
+  .portfolio .portfolio-entry:hover .entry-image img {
+    transform: scale(1.05);
+  }
+
+  .portfolio .portfolio-entry:hover .entry-image .entry-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .portfolio .portfolio-entry:hover .entry-image .entry-overlay .overlay-content {
+    transform: translateY(0);
+  }
+
+  .portfolio .portfolio-entry:hover .entry-image .entry-overlay .entry-links a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.portfolio .portfolio-entry.is-revealed .entry-image img {
   transform: scale(1.05);
 }
 
-.portfolio .portfolio-entry:hover .entry-image .entry-overlay {
+.portfolio .portfolio-entry.is-revealed .entry-image .entry-overlay {
   opacity: 1;
   transform: translateY(0);
 }
 
-.portfolio .portfolio-entry:hover .entry-image .entry-overlay .overlay-content {
+.portfolio .portfolio-entry.is-revealed .entry-image .entry-overlay .overlay-content {
   transform: translateY(0);
 }
 
-.portfolio .portfolio-entry:hover .entry-image .entry-overlay .entry-links a {
+.portfolio .portfolio-entry.is-revealed .entry-image .entry-overlay .entry-links a {
   opacity: 1;
   transform: translateY(0);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .portfolio .portfolio-entry {
+    cursor: pointer;
+  }
 }
 
 @media (max-width: 768px) {
-  .portfolio .portfolio-entry .entry-image .entry-overlay {
-    padding: 20px;
+  .portfolio .portfolio-entry .entry-image .entry-overlay .overlay-content {
+    padding: 18px 18px 20px;
+    gap: 8px;
   }
 
   .portfolio .portfolio-entry .entry-image .entry-overlay .entry-title {
-    font-size: 20px;
-    margin-bottom: 15px;
+    font-size: 18px;
+  }
+
+  .portfolio .portfolio-entry .entry-image .entry-overlay .entry-summary {
+    min-height: calc(1.45em * 2);
+    font-size: 13px;
   }
 
   .portfolio .portfolio-entry .entry-image .entry-overlay .entry-links a {
@@ -1987,24 +2127,6 @@ section,
   .portfolio .row .portfolio-item {
     padding-left: 15px;
     padding-right: 15px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .portfolio .entry-overlay {
-    padding: 25px;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-  .portfolio .entry-overlay {
-    padding: 20px;
-  }
-}
-
-@media (max-width: 991px) {
-  .portfolio .entry-overlay {
-    padding: 20px;
   }
 }
 
@@ -2561,11 +2683,11 @@ section,
 .portfolio-details .portfolio-details-media .tech-stack-badges span {
   display: inline-block;
   padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 20px;
-  background-color: color-mix(in srgb, var(--heading-color), transparent 85%);
-  color: var(--heading-color);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-color) 88%, #000 12%);
+  color: var(--contrast-color);
   transition: all 0.3s ease;
 }
 

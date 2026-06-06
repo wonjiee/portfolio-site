@@ -18,47 +18,62 @@
       <p>게시글 목록</p>
     </div>
 
-    <div
-        class="container"
-        data-aos="fade-up"
-    >
-
-      <article
-          v-for="post in posts"
-          :key="post.id"
-          class="mb-4 pb-3 border-bottom"
-      >
-        <router-link
-            :to="`/posts/${post.id}`"
-            class="text-decoration-none"
-        >
-          <h4>
-            <span
-                v-if="post.pinned"
-                class="badge bg-primary me-1"
-            >고정</span>
-            {{ post.title }}
-          </h4>
-        </router-link>
-        <p
-            v-if="excerpt(post.content)"
-            class="text-muted mb-2"
-        >
-          {{ excerpt(post.content) }}
-        </p>
-        <p class="text-muted small mb-0">
-          {{ formatDate(post.createdAt) }}
-        </p>
-      </article>
+    <div class="container">
 
       <p
-          v-if="posts.length === 0"
+          v-if="loading"
+          class="text-muted py-4"
+      >
+        불러오는 중…
+      </p>
+
+      <TransitionGroup
+          v-else
+          tag="div"
+          name="list-content-reveal"
+          appear
+      >
+        <article
+            v-for="(post, index) in posts"
+            :key="post.id"
+            class="mb-4 pb-3 border-bottom"
+            :style="revealDelay(index)"
+        >
+          <router-link
+              :to="`/posts/${post.id}`"
+              class="text-decoration-none"
+          >
+            <h4>
+              <span
+                  v-if="post.pinned"
+                  class="badge bg-primary me-1"
+              >고정</span>
+              {{ post.title }}
+            </h4>
+          </router-link>
+          <p
+              v-if="excerpt(post.content)"
+              class="text-muted mb-2"
+          >
+            {{ excerpt(post.content) }}
+          </p>
+          <p class="text-muted small mb-0">
+            {{ formatDate(post.createdAt) }}
+          </p>
+        </article>
+      </TransitionGroup>
+
+      <p
+          v-if="!loading && posts.length === 0"
           class="text-muted"
       >
         등록된 글이 없습니다.
       </p>
 
-      <div class="d-flex justify-content-center mt-4">
+      <div
+          v-if="!loading"
+          class="d-flex justify-content-center mt-4 list-section-actions"
+      >
         <router-link
             to="/"
             class="btn btn-outline-primary"
@@ -75,11 +90,13 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import api from '@/api/axios'
 import { excerptFromMarkdown } from '@/utils/markdown'
+import { refreshAos } from '@/composables/useTemplateEffects'
 
 const posts = ref([])
+const loading = ref(true)
 
 function excerpt(content) {
 
@@ -93,7 +110,14 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString('ko-KR')
 }
 
+function revealDelay(index) {
+
+  return { '--reveal-delay': `${index * 60}ms` }
+}
+
 async function loadPosts() {
+
+  loading.value = true
 
   try {
 
@@ -103,6 +127,12 @@ async function loadPosts() {
   } catch (error) {
 
     console.error(error)
+
+  } finally {
+
+    loading.value = false
+    await nextTick()
+    refreshAos()
   }
 }
 

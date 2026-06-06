@@ -4,7 +4,9 @@ import com.jiwon.portfolio.backend.entity.Project;
 import com.jiwon.portfolio.backend.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -41,7 +43,10 @@ public class ProjectService {
     public Project findById(Long id) {
 
         return repository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Project not found"
+                ));
     }
 
     public Project create(Project project) {

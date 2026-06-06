@@ -18,52 +18,47 @@
       <p>프로젝트 목록</p>
     </div>
 
-    <div
-        class="container"
-        data-aos="fade-up"
-    >
-
-      <div class="row g-4">
-
-        <div
-            v-for="project in projects"
-            :key="project.id"
-            class="col-xl-4 col-lg-4 col-md-6"
-        >
-          <article class="portfolio-entry">
-            <figure class="entry-image">
-              <img
-                  :src="projectImage(project)"
-                  class="img-fluid"
-                  :alt="project.title"
-                  loading="lazy"
-              >
-              <div class="entry-overlay">
-                <div class="overlay-content">
-                  <div class="entry-meta">{{ project.techStack }}</div>
-                  <h3 class="entry-title">{{ project.title }}</h3>
-                  <p class="small text-white-50 mb-2">{{ project.summary }}</p>
-                  <div class="entry-links">
-                    <router-link :to="`/projects/${project.id}`">
-                      <i class="bi bi-arrow-right"></i>
-                    </router-link>
-                  </div>
-                </div>
-              </div>
-            </figure>
-          </article>
-        </div>
-
-      </div>
+    <div class="container">
 
       <p
-          v-if="projects.length === 0"
+          v-if="loading"
+          class="text-center text-muted py-4"
+      >
+        불러오는 중…
+      </p>
+
+      <TransitionGroup
+          v-else
+          tag="div"
+          name="list-reveal"
+          appear
+          class="row g-4"
+      >
+        <div
+            v-for="(project, index) in projects"
+            :key="project.id"
+            class="col-xl-4 col-lg-4 col-md-6"
+            :style="revealDelay(index)"
+        >
+          <PortfolioCard
+              :project="project"
+              :revealed="isRevealed(project.id)"
+              @click="onCardClick(project.id, $event)"
+          />
+        </div>
+      </TransitionGroup>
+
+      <p
+          v-if="!loading && projects.length === 0"
           class="text-center text-muted mt-4"
       >
         등록된 프로젝트가 없습니다.
       </p>
 
-      <div class="d-flex justify-content-center mt-4">
+      <div
+          v-if="!loading"
+          class="d-flex justify-content-center mt-4 list-section-actions"
+      >
         <router-link
             to="/"
             class="btn btn-outline-primary"
@@ -80,17 +75,25 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import api from '@/api/axios'
+import { usePortfolioCardReveal } from '@/composables/usePortfolioCardReveal'
+import { refreshAos } from '@/composables/useTemplateEffects'
+import PortfolioCard from '@/components/PortfolioCard.vue'
+
+const { isRevealed, onCardClick } = usePortfolioCardReveal()
 
 const projects = ref([])
+const loading = ref(true)
 
-function projectImage(project) {
+function revealDelay(index) {
 
-  return project.imageUrl || '/style/img/abstract-bg-1.webp'
+  return { '--reveal-delay': `${index * 70}ms` }
 }
 
 async function loadProjects() {
+
+  loading.value = true
 
   try {
 
@@ -100,6 +103,12 @@ async function loadProjects() {
   } catch (error) {
 
     console.error(error)
+
+  } finally {
+
+    loading.value = false
+    await nextTick()
+    refreshAos()
   }
 }
 

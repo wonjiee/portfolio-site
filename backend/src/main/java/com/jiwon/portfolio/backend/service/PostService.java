@@ -4,7 +4,9 @@ import com.jiwon.portfolio.backend.entity.Post;
 import com.jiwon.portfolio.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,7 +30,10 @@ public class PostService {
     public Post findById(Long id) {
 
         return repository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Post not found"
+                ));
     }
 
     public Post create(Post post) {
