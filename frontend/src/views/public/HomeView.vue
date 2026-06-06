@@ -482,6 +482,7 @@ import { useRoute } from 'vue-router'
 import api from '@/api/axios'
 import { usePortfolioCardReveal } from '@/composables/usePortfolioCardReveal'
 import { refreshAos } from '@/composables/useTemplateEffects'
+import { isPageReload } from '@/utils/navigation'
 import PortfolioCard from '@/components/PortfolioCard.vue'
 
 const route = useRoute()
@@ -638,7 +639,7 @@ onMounted(async () => {
   await nextTick()
   refreshAos()
 
-  if (route.hash === '#contact') {
+  if (route.hash === '#contact' && !isPageReload()) {
 
     scrollToContact()
   }

@@ -12,9 +12,16 @@ import '@/assets/style/list-reveal.css'
 
 import App from './App.vue'
 import router from './router'
-
 import { inject } from '@vercel/analytics'
+import {
+  disableBrowserScrollRestoration,
+  scrollToPageTop
+} from '@/utils/navigation'
+
 inject()
+
+disableBrowserScrollRestoration()
+scrollToPageTop()
 
 const app = createApp(App)
 
