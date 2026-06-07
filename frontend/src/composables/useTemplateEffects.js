@@ -1,5 +1,6 @@
 import { onMounted, onUnmounted } from 'vue'
 import AOS from 'aos'
+import { syncHeaderHeight } from '@/utils/scroll'
 
 let aosInitialized = false
 
@@ -79,8 +80,10 @@ export function useTemplateEffects() {
   onMounted(() => {
 
     initAos()
+    syncHeaderHeight()
 
     document.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', syncHeaderHeight, { passive: true })
     toggleScrolled()
     toggleScrollTop()
   })
@@ -88,6 +91,7 @@ export function useTemplateEffects() {
   onUnmounted(() => {
 
     document.removeEventListener('scroll', onScroll)
+    window.removeEventListener('resize', syncHeaderHeight)
     document.body.classList.remove('scrolled')
   })
 

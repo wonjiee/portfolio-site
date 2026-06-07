@@ -90,18 +90,18 @@
         </li>
         <li>
           <a
-              href="/projects"
-              :class="{ active: route.path.startsWith('/projects') }"
-              @click="navigateFromMenu('/projects', $event)"
+              href="/#portfolio"
+              :class="{ active: isProjectsActive }"
+              @click="goPortfolio"
           >
             Projects
           </a>
         </li>
         <li>
           <a
-              href="/posts"
-              :class="{ active: route.path.startsWith('/posts') }"
-              @click="navigateFromMenu('/posts', $event)"
+              href="/#blog"
+              :class="{ active: isBlogActive }"
+              @click="goBlog"
           >
             Blog
           </a>
@@ -109,6 +109,7 @@
         <li>
           <a
               href="/#contact"
+              :class="{ active: route.path === '/' && route.hash === '#contact' }"
               @click="goContact"
           >
             Contact
@@ -140,16 +141,29 @@
 
 <script setup>
 
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { initAos } from '@/composables/useTemplateEffects'
+import { scrollToHomeSection } from '@/utils/scroll'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
 const menuOpen = ref(false)
+
+const isProjectsActive = computed(() => {
+
+  return route.path.startsWith('/projects')
+      || (route.path === '/' && route.hash === '#portfolio')
+})
+
+const isBlogActive = computed(() => {
+
+  return route.path.startsWith('/posts')
+      || (route.path === '/' && route.hash === '#blog')
+})
 
 function toggleMobileNav() {
 
@@ -203,20 +217,36 @@ function navigateFromMenu(path, event) {
   router.push(path)
 }
 
-function goContact(event) {
+function goHomeSection(hash, event) {
 
   event.preventDefault()
   closeMobileNav()
 
   if (route.path === '/') {
 
-    document.querySelector('#contact')?.scrollIntoView({
-      behavior: 'smooth'
-    })
+    scrollToHomeSection(hash)
     return
   }
 
-  router.push({ path: '/', hash: '#contact' })
+  router.push({ path: '/', hash }).then(async () => {
+    await nextTick()
+    await scrollToHomeSection(hash)
+  })
+}
+
+function goPortfolio(event) {
+
+  goHomeSection('#portfolio', event)
+}
+
+function goBlog(event) {
+
+  goHomeSection('#blog', event)
+}
+
+function goContact(event) {
+
+  goHomeSection('#contact', event)
 }
 
 watch(() => route.path, closeMobileNav)

@@ -58,7 +58,12 @@
 
 /* Smooth scroll */
 :root {
+  --header-height: 72px;
   scroll-behavior: smooth;
+}
+
+html {
+  scroll-padding-top: var(--header-height);
 }
 
 /*--------------------------------------------------------------
@@ -147,7 +152,6 @@ h6 {
 # Global Header
 --------------------------------------------------------------*/
 .header {
-  --header-height: 72px;
   --background-color: rgba(255, 255, 255, 0.88);
   color: var(--default-color);
   background-color: transparent;
@@ -487,7 +491,7 @@ body.scrolled .header {
 .page-title {
   color: var(--default-color);
   background-color: var(--background-color);
-  padding: 25px 0;
+  padding: calc(var(--header-height) + 25px) 0 25px;
   position: relative;
 }
 
@@ -2450,6 +2454,12 @@ section,
 /*--------------------------------------------------------------
 # Contact Section
 --------------------------------------------------------------*/
+#contact,
+#portfolio,
+#blog {
+  scroll-margin-top: var(--header-height);
+}
+
 .contact .info-box {
   background-color: var(--accent-color);
   color: var(--contrast-color);

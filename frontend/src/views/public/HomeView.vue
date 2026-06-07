@@ -30,12 +30,13 @@
                 data-aos="fade-up"
                 data-aos-delay="200"
             >
-              <router-link
-                  to="/projects"
+              <a
+                  href="#portfolio"
                   class="btn btn-primary"
+                  @click.prevent="scrollToPortfolio"
               >
                 View My Work
-              </router-link>
+              </a>
               <a
                   href="#contact"
                   class="btn btn-outline"
@@ -289,7 +290,10 @@
   </section>
 
   <!-- Blog preview -->
-  <section class="section light-background">
+  <section
+      id="blog"
+      class="section light-background"
+  >
 
     <div class="container section-title">
       <h2>Blog</h2>
@@ -482,7 +486,7 @@ import { useRoute } from 'vue-router'
 import api from '@/api/axios'
 import { usePortfolioCardReveal } from '@/composables/usePortfolioCardReveal'
 import { refreshAos } from '@/composables/useTemplateEffects'
-import { isPageReload } from '@/utils/navigation'
+import { isHomeSectionHash, scrollToHomeSection } from '@/utils/scroll'
 import PortfolioCard from '@/components/PortfolioCard.vue'
 
 const route = useRoute()
@@ -554,9 +558,12 @@ function formatDate(date) {
 
 function scrollToContact() {
 
-  document.querySelector('#contact')?.scrollIntoView({
-    behavior: 'smooth'
-  })
+  scrollToHomeSection('#contact')
+}
+
+function scrollToPortfolio() {
+
+  scrollToHomeSection('#portfolio')
 }
 
 async function loadFeaturedProjects() {
@@ -639,9 +646,9 @@ onMounted(async () => {
   await nextTick()
   refreshAos()
 
-  if (route.hash === '#contact' && !isPageReload()) {
+  if (isHomeSectionHash(route.hash)) {
 
-    scrollToContact()
+    await scrollToHomeSection(route.hash)
   }
 })
 
